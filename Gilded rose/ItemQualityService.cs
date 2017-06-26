@@ -8,7 +8,9 @@ namespace Gilded_rose
         {
             foreach (var item in items)            
             {
-                UpdateQuality(item);
+                var storeItem = new StoreItem(item);
+                storeItem.UpdateQuality();
+                //UpdateQuality(item);
             }
         }
 

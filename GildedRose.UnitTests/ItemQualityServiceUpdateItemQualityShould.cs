@@ -20,7 +20,7 @@ namespace GildedRose.UnitTests
             var normalItem = GetNormalItem();
             var startingQuality = normalItem.Quality;
 
-            ItemQualityService.UpdateQuality(normalItem);
+            normalItem.UpdateQuality();
 
             normalItem.Quality.Should().Be(startingQuality - 1);
         }
@@ -30,8 +30,7 @@ namespace GildedRose.UnitTests
         {
             var normalItem = GetNormalItem();
             var startingSellin = normalItem.SellIn;
-
-            ItemQualityService.UpdateQuality(normalItem);
+            normalItem.UpdateQuality();
 
             // startingSellin - 1 - much more expressive then to put magic number 9.
             normalItem.SellIn.Should().Be(startingSellin - 1);
@@ -43,7 +42,7 @@ namespace GildedRose.UnitTests
             var normalItem = GetNormalItem(sellIn: 0);
             var startingQuality = normalItem.Quality;
 
-            ItemQualityService.UpdateQuality(normalItem);
+            normalItem.UpdateQuality();
 
             normalItem.Quality.Should().Be(startingQuality - 2);
         }
@@ -52,7 +51,7 @@ namespace GildedRose.UnitTests
         public void NotReduceQualityBelowZero()
         {
             var normalItem = GetNormalItem(quality: 0);
-            ItemQualityService.UpdateQuality(normalItem);
+            normalItem.UpdateQuality();
 
             normalItem.Quality.Should().Be(0);
         }
@@ -62,7 +61,7 @@ namespace GildedRose.UnitTests
         {
             var agedBrie = GetAgedBrie();
             var startingQuality = agedBrie.Quality;
-            ItemQualityService.UpdateQuality(agedBrie);
+            agedBrie.UpdateQuality();
 
             agedBrie.Quality.Should().Be(startingQuality + 1);
         }
@@ -74,7 +73,7 @@ namespace GildedRose.UnitTests
             SYSTEM_MAX_QUALITY = 50;
             var agedBrie = GetAgedBrie(quality: SYSTEM_MAX_QUALITY);
             var startingQuality = agedBrie.Quality;
-            ItemQualityService.UpdateQuality(agedBrie);
+            agedBrie.UpdateQuality();
 
             agedBrie.Quality.Should().Be(startingQuality);
         }
@@ -84,7 +83,7 @@ namespace GildedRose.UnitTests
         {
             var agedBrie = GetAgedBrie(sellIn: 0);
             var startingQuality = agedBrie.Quality;
-            ItemQualityService.UpdateQuality(agedBrie);
+            agedBrie.UpdateQuality();
 
             agedBrie.Quality.Should().Be(startingQuality + 2);
         }
@@ -94,7 +93,7 @@ namespace GildedRose.UnitTests
         {
             var sulfuras = GetSulfuras();
             var startingQuality = sulfuras.Quality;
-            ItemQualityService.UpdateQuality(sulfuras);
+            sulfuras.UpdateQuality();
 
             sulfuras.Quality.Should().Be(startingQuality);
         }
@@ -104,7 +103,7 @@ namespace GildedRose.UnitTests
         {
             var sulfuras = GetSulfuras();
             var startingSellin = sulfuras.SellIn;
-            ItemQualityService.UpdateQuality(sulfuras);
+            sulfuras.UpdateQuality();
 
             sulfuras.SellIn.Should().Be(startingSellin);
         }
@@ -114,7 +113,7 @@ namespace GildedRose.UnitTests
         {
             var backstagePasses = GetBackstagePasses(sellIn: 11);
             var startingQuality = backstagePasses.Quality;
-            ItemQualityService.UpdateQuality(backstagePasses);
+            backstagePasses.UpdateQuality();
 
             backstagePasses.Quality.Should().Be(startingQuality + 1);
         }
@@ -124,7 +123,7 @@ namespace GildedRose.UnitTests
         {
             var backstagePasses = GetBackstagePasses(sellIn: 10);
             var startingQuality = backstagePasses.Quality;
-            ItemQualityService.UpdateQuality(backstagePasses);
+            backstagePasses.UpdateQuality();
 
             backstagePasses.Quality.Should().Be(startingQuality + 2);
         }
@@ -135,7 +134,7 @@ namespace GildedRose.UnitTests
         {
             var backstagePasses = GetBackstagePasses(sellIn: 6);
             var startingQuality = backstagePasses.Quality;
-            ItemQualityService.UpdateQuality(backstagePasses);
+            backstagePasses.UpdateQuality();
 
             backstagePasses.Quality.Should().Be(startingQuality + 2);
         }
@@ -145,7 +144,7 @@ namespace GildedRose.UnitTests
         {
             var backstagePasses = GetBackstagePasses(sellIn: 5);
             var startingQuality = backstagePasses.Quality;
-            ItemQualityService.UpdateQuality(backstagePasses);
+            backstagePasses.UpdateQuality();
 
             backstagePasses.Quality.Should().Be(startingQuality + 3);
         }
@@ -155,7 +154,7 @@ namespace GildedRose.UnitTests
         {
             var backstagePasses = GetBackstagePasses(sellIn: 1);
             var startingQuality = backstagePasses.Quality;
-            ItemQualityService.UpdateQuality(backstagePasses);
+            backstagePasses.UpdateQuality();
 
             backstagePasses.Quality.Should().Be(startingQuality + 3);
         }
@@ -165,29 +164,29 @@ namespace GildedRose.UnitTests
         {
             var backstagePasses = GetBackstagePasses(sellIn: 0);
             var startingQuality = backstagePasses.Quality;
-            ItemQualityService.UpdateQuality(backstagePasses);
+            backstagePasses.UpdateQuality();
 
             backstagePasses.Quality.Should().Be(0);
         }
 
-        private static Item GetNormalItem(int sellIn = DEFAULT_STARTING_SELLIN, int quality = DEFAULT_STARTING_QUALITY)
+        private static StoreItem GetNormalItem(int sellIn = DEFAULT_STARTING_SELLIN, int quality = DEFAULT_STARTING_QUALITY)
         {
-            return new Item { Name = "+5 Deexterity vet", SellIn = sellIn, Quality = quality };
+            return new StoreItem(new Item { Name = "+5 Deexterity vet", SellIn = sellIn, Quality = quality });
         }
 
-        private static Item GetAgedBrie(int sellIn = DEFAULT_STARTING_SELLIN, int quality = DEFAULT_STARTING_QUALITY)
+        private static StoreItem GetAgedBrie(int sellIn = DEFAULT_STARTING_SELLIN, int quality = DEFAULT_STARTING_QUALITY)
         {
-            return new Item { Name = "Aged Brie", SellIn = sellIn, Quality = quality };
+            return new StoreItem(new Item { Name = "Aged Brie", SellIn = sellIn, Quality = quality });
         }
 
-        private static Item GetSulfuras()
+        private static StoreItem GetSulfuras()
         {
-            return new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 };
+            return new StoreItem(new Item { Name = "Sulfuras, Hand of Ragnaros", SellIn = 0, Quality = 80 });
         }
 
-        private static Item GetBackstagePasses(int sellIn = 15, int quality = DEFAULT_STARTING_QUALITY)
+        private static StoreItem GetBackstagePasses(int sellIn = 15, int quality = DEFAULT_STARTING_QUALITY)
         {
-            return new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = sellIn, Quality = quality };
+            return new StoreItem(new Item { Name = "Backstage passes to a TAFKAL80ETC concert", SellIn = sellIn, Quality = quality });
         }
     }
 }
