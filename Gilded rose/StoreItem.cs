@@ -1,23 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Gilded_rose.Strategies;
 
 namespace Gilded_rose
 {
     public class StoreItem
     {
         private readonly Item _item;
+        private readonly IUpdateQualityStrategy _updateQualityStrategy;
 
         public StoreItem()
         {
-                
+
         }
 
         public StoreItem(Item item)
         {
             _item = item;
+
+            // let's start with default strategy and change it where appropriate
+            _updateQualityStrategy = new DefaultUpdateQualityStrategy();
+
+            if (Name == "Aged Brie")
+            {
+                _updateQualityStrategy = new BetterWithTimeUdpateQualityStrategy();
+            }
+
+            if (Name == "Sulfuras, Hand of Ragnaros")
+            {
+                _updateQualityStrategy = new LegendaryUpdateQualityStrategy();
+            }
+
+            if (Name == "Backstage passes to a TAFKAL80ETC concert")
+            {
+                _updateQualityStrategy = new BackStagePassUpdateQualityStrategy();
+            }
         }
 
         public string Name
@@ -31,7 +46,7 @@ namespace Gilded_rose
             get { return _item.Quality; }
             set { _item.Quality = value; }
         }
-        
+
         public int SellIn
         {
             get { return _item.SellIn; }
@@ -40,75 +55,7 @@ namespace Gilded_rose
 
         public void UpdateQuality()
         {
-            if (Name != "Aged Brie" && Name != "Backstage passes to a TAFKAL80ETC concert")
-            {
-                if (Quality > 0)
-                {
-                    if (Name != "Sulfuras, Hand of Ragnaros")
-                    {
-                        Quality = Quality - 1;
-                    }
-                }
-            }
-            else
-            {
-                if (Quality < 50)
-                {
-                    Quality = Quality + 1;
-
-                    if (Name == "Backstage passes to a TAFKAL80ETC concert")
-                    {
-                        if (SellIn < 11)
-                        {
-                            if (Quality < 50)
-                            {
-                                Quality = Quality + 1;
-                            }
-                        }
-
-                        if (SellIn < 6)
-                        {
-                            if (Quality < 50)
-                            {
-                                Quality = Quality + 1;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (Name != "Sulfuras, Hand of Ragnaros")
-            {
-                SellIn = SellIn - 1;
-            }
-
-            if (SellIn < 0)
-            {
-                if (Name != "Aged Brie")
-                {
-                    if (Name != "Backstage passes to a TAFKAL80ETC concert")
-                    {
-                        if (Quality > 0)
-                        {
-                            if (Name != "Sulfuras, Hand of Ragnaros")
-                            {
-                                Quality = Quality - 1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        Quality = Quality - Quality;
-                    }
-                }
-                else
-                {
-                    if (Quality < 50)
-                    {
-                        Quality = Quality + 1;
-                    }
-                }
-            }
+            _updateQualityStrategy.UpdateQuality(this);
         }
     }
 }
